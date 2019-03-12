@@ -13,22 +13,16 @@ import org.http4s.websocket.WebSocketFrame
 import org.http4s.websocket.WebSocketFrame.Text
 import org.http4s.{HttpApp, HttpRoutes}
 
-object Main extends IOApp with Http4sDsl[IO] {
+object MinimalWebsocketExample extends IOApp with Http4sDsl[IO] {
 
   override def run(args: List[String]): IO[ExitCode] =
     BlazeServerBuilder[IO]
       .bindHttp()
-      .withHttpApp(httpApp)
+      .withHttpApp(Router("/" -> service).orNotFound)
       .serve
       .compile[IO, IO, ExitCode]
       .drain
       .as(ExitCode.Success)
-
-  private def httpApp: HttpApp[IO] =
-    routes.orNotFound
-
-  private def routes: HttpRoutes[IO] =
-    Router("/" -> service)
 
   private def service: HttpRoutes[IO] =
     HttpRoutes.of {
@@ -41,10 +35,6 @@ object Main extends IOApp with Http4sDsl[IO] {
     }
 
   def in(input: Stream[IO, WebSocketFrame]): Stream[IO, WebSocketFrame] =
-    input
-      .map {
-        case Text(value, _) => Text(show"Received $value")
-        case _              => Text("unsupported frame")
-      }
+    input.map { case Text(value, _) => Text(show"Received $value") }
 
 }

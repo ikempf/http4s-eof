@@ -13,6 +13,7 @@ class MainTest extends FlatSpec with Matchers with ScalaFutures {
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
   val WsUrl   = "ws://localhost:8080/open-ws"
+//  val WsUrl   = "ws://localhost:8080/wsecho"
   val request = WebSocketRequest(WsUrl)
 
   val sourceQueue = Source.queue[Message](1000, OverflowStrategy.fail)
