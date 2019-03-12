@@ -4,6 +4,7 @@ import cats.effect.{ExitCode, IO, IOApp}
 import cats.implicits._
 import fs2.Stream
 import fs2.concurrent.Queue
+import org.http4s.HttpRoutes
 import org.http4s.dsl.Http4sDsl
 import org.http4s.implicits._
 import org.http4s.server.Router
@@ -11,7 +12,6 @@ import org.http4s.server.blaze.BlazeServerBuilder
 import org.http4s.server.websocket.WebSocketBuilder
 import org.http4s.websocket.WebSocketFrame
 import org.http4s.websocket.WebSocketFrame.Text
-import org.http4s.{HttpApp, HttpRoutes}
 
 object MinimalWebsocketExample extends IOApp with Http4sDsl[IO] {
 
@@ -35,6 +35,9 @@ object MinimalWebsocketExample extends IOApp with Http4sDsl[IO] {
     }
 
   def in(input: Stream[IO, WebSocketFrame]): Stream[IO, WebSocketFrame] =
-    input.map { case Text(value, _) => Text(show"Received $value") }
+    input.evalMap(frame => {
+      val value = s"Received $frame"
+      IO(println(value)).as(Text(value))
+    })
 
 }
