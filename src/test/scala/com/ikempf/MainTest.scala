@@ -14,7 +14,7 @@ class MainTest extends FlatSpec with Matchers with ScalaFutures {
   implicit val system: ActorSystem             = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-    val WsUrl   = "ws://localhost:8080/open-ws"
+    val WsUrl   = "ws://localhost:8080/ws"
 //  val WsUrl   = "ws://localhost:8080/wsecho"
   val request = WebSocketRequest(WsUrl)
 
