@@ -33,7 +33,7 @@ class Server[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Htt
         Stream.awakeEvery[F](1.seconds).map(d => Text(s"Ping! $d"))
       val fromClient: Pipe[F, WebSocketFrame, Unit] = _.evalMap {
         case Text(msg, _) => prt(s"Received text $msg")
-        case f            => prt(s"Unknown type: $f")
+        case frame        => prt(s"Unknown type: $frame")
       }
       WebSocketBuilder[F].build(toClient, fromClient)
 

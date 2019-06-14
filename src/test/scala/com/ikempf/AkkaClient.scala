@@ -9,13 +9,14 @@ import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Milliseconds, Seconds, Span}
 import org.scalatest.{FlatSpec, Matchers}
 
-class MainTest extends FlatSpec with Matchers with ScalaFutures {
+class AkkaClient extends FlatSpec with Matchers with ScalaFutures {
   implicit val patience: PatienceConfig        = PatienceConfig(Span(5, Seconds), Span(100, Milliseconds))
   implicit val system: ActorSystem             = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
 
-    val WsUrl   = "ws://localhost:8080/ws"
+//    val WsUrl   = "ws://localhost:8080/wsping"
 //  val WsUrl   = "ws://localhost:8080/wsecho"
+    val WsUrl   = "ws://localhost:8080/wsclose"
   val request = WebSocketRequest(WsUrl)
 
   val sourceQueue = Source.queue[Message](1000, OverflowStrategy.fail)
@@ -28,9 +29,9 @@ class MainTest extends FlatSpec with Matchers with ScalaFutures {
       .toMat(sinkQueue)(Keep.both)
       .run()
 
-  Range(0, 10).foreach { _ =>
+  Range(0, 1).foreach { _ =>
     input.offer(TextMessage("Hi")).futureValue
-    println("Output", output.pull().futureValue)
+    println(("Output", output.pull().futureValue))
   }
 
   input.complete()
