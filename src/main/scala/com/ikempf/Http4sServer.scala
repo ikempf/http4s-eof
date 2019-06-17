@@ -2,7 +2,7 @@ package com.ikempf
 
 import cats.effect._
 import cats.implicits._
-import com.ikempf.Server.prt
+import com.ikempf.Http4sServer.prt
 import fs2._
 import fs2.concurrent.Queue
 import org.http4s._
@@ -15,14 +15,14 @@ import org.http4s.websocket.WebSocketFrame._
 
 import scala.concurrent.duration._
 
-object Start extends IOApp {
+object Http4sStart extends IOApp {
 
   override def run(args: List[String]): IO[ExitCode] =
-    Server[IO].stream.compile.drain.as(ExitCode.Success)
+    Http4sServer[IO].stream.compile.drain.as(ExitCode.Success)
 
 }
 
-class Server[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Http4sDsl[F] {
+class Http4sServer[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Http4sDsl[F] {
 
   def routes: HttpRoutes[F] = HttpRoutes.of[F] {
     case GET -> Root / "hello" =>
@@ -80,10 +80,10 @@ class Server[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Htt
       .serve
 }
 
-object Server {
+object Http4sServer {
 
-  def apply[F[_]: ConcurrentEffect: Timer]: Server[F] =
-    new Server[F]
+  def apply[F[_]: ConcurrentEffect: Timer]: Http4sServer[F] =
+    new Http4sServer[F]
 
   def prt[F[_]: Sync](s: String): F[Unit] =
     Sync[F].delay(println(s))

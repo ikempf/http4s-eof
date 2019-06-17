@@ -6,7 +6,7 @@ import org.java_websocket.WebSocket
 import org.java_websocket.handshake.ClientHandshake
 import org.java_websocket.server.WebSocketServer
 
-object JavaWebsocketServer extends App {
+object JavaWebsocketStart extends App {
   val addr = new InetSocketAddress("127.0.0.1", 8080)
   val c = new JavaServer(addr)
   c.start()
