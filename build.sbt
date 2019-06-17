@@ -1,4 +1,4 @@
-val http4sVersion = "0.20.0-M6"
+val http4sVersion = "0.20.3"
 
 lazy val `http4s-eof` = (project in file("."))
   .settings(
