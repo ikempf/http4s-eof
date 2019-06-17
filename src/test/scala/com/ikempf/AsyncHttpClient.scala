@@ -14,7 +14,7 @@ object AsyncHttpClient extends App {
         .addWebSocketListener(new WebSocketListener() {
 
           override def onOpen(websocket: WebSocket) {
-            websocket.sendTextFrame("...")
+            websocket.sendTextFrame("")
           }
 
           override def onTextFrame(payload: String, finalFragment: Boolean, rsv: Int) {
@@ -27,7 +27,7 @@ object AsyncHttpClient extends App {
 
           override def onClose(websocket: WebSocket, code: Int, reason: String): Unit = {
             println(s"Closed $code $reason")
-//            websocket.sendCloseFrame()
+            websocket.sendCloseFrame(1000, reason)
           }
 
         })

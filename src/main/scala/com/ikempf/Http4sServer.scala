@@ -39,13 +39,13 @@ class Server[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Htt
 
     case GET -> Root / "wsecho" =>
       val echoReply: Pipe[F, WebSocketFrame, WebSocketFrame] =
-        _.collect {
+        _.evalMap {
           case Text(msg, _) =>
             prt(s"Received text $msg")
-            Text(s"You sent the server: $msg")
+              .as(Text(s"You sent the server: $msg"))
           case a =>
             prt(s"Received else $a")
-            Text("Something new")
+              .as(Text("Something new"))
         }
 
       Queue
@@ -58,10 +58,9 @@ class Server[F[_]](implicit F: ConcurrentEffect[F], timer: Timer[F]) extends Htt
 
     case GET -> Root / "wsclose" =>
       val echoReply: Pipe[F, WebSocketFrame, WebSocketFrame] =
-        _.collect {
-          case a =>
-            prt(s"Received $a")
-            Close(1000).right.get
+        _.evalMap { frame =>
+          prt(s"Received $frame")
+            .as(Close(1000).right.get)
         }
 
       Queue

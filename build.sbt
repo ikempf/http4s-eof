@@ -12,10 +12,11 @@ lazy val `http4s-eof` = (project in file("."))
       "ch.qos.logback"      % "logback-classic"      % "1.2.3",
       "org.http4s"          %% "http4s-dsl"          % http4sVersion,
       "org.http4s"          %% "http4s-blaze-server" % http4sVersion,
+      "com.typesafe.akka"   %% "akka-http"           % "10.1.5",
+      "com.typesafe.akka"   %% "akka-stream"         % "2.5.19",
+      "org.asynchttpclient" % "async-http-client"    % "2.10.0",
+      "org.java-websocket"  % "Java-WebSocket"       % "1.4.0",
       "org.scalatest"       %% "scalatest"           % "3.0.5" % Test,
-      "com.typesafe.akka"   %% "akka-http"           % "10.1.5" % Test,
-      "org.asynchttpclient" % "async-http-client"    % "2.10.0" % Test,
-      "com.typesafe.akka"   %% "akka-stream"         % "2.5.19" % Test,
     ),
     addCompilerPlugin("org.spire-math" %% "kind-projector" % "0.9.8"),
     scalacOptions ++= List(
@@ -40,3 +41,6 @@ lazy val `http4s-eof` = (project in file("."))
       "-Ywarn-value-discard"
     ),
   )
+
+fork in run := true
+javaOptions += "-Dscala.control.noTraceSuppression=true"

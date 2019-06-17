@@ -7,9 +7,8 @@ import akka.stream.scaladsl.{Keep, Sink, Source}
 import akka.stream.{ActorMaterializer, OverflowStrategy}
 import org.scalatest.concurrent.ScalaFutures
 import org.scalatest.time.{Milliseconds, Seconds, Span}
-import org.scalatest.{FlatSpec, Matchers}
 
-class AkkaClient extends FlatSpec with Matchers with ScalaFutures {
+object AkkaClient extends App with ScalaFutures {
   implicit val patience: PatienceConfig        = PatienceConfig(Span(5, Seconds), Span(100, Milliseconds))
   implicit val system: ActorSystem             = ActorSystem()
   implicit val materializer: ActorMaterializer = ActorMaterializer()
@@ -29,9 +28,9 @@ class AkkaClient extends FlatSpec with Matchers with ScalaFutures {
       .toMat(sinkQueue)(Keep.both)
       .run()
 
-  Range(0, 1).foreach { _ =>
-    input.offer(TextMessage("Hi")).futureValue
-    println(("Output", output.pull().futureValue))
+  Range(0, 2).foreach { _ =>
+    input.offer(TextMessage("")).futureValue
+//    println(("Output", output.pull().futureValue))
   }
 
   input.complete()
